@@ -1,0 +1,15 @@
+version: "2"
+services: 
+  mysql:
+    container_name: dev-mysql
+    image: mysql
+    ports:
+      - "3306:3306"
+    volumes: 
+      - $PWD/init:/docker-entrypoint-initdb.d
+      - $PWD/config:/etc/mysql/conf.d
+#      - $PWD/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci]
+
