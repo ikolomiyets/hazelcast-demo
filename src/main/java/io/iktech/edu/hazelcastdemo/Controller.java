@@ -49,6 +49,7 @@ public class Controller {
             tmpMap.clear();
             logger.info(String.format("Loaded page %d", currentPage));
         }
+//        service.fillCache();
         logger.info("Data loaded into the cluster");
         return "{}";
     }
