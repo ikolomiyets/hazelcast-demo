@@ -67,4 +67,10 @@ public class Controller {
     public Customer getCustomerFromCache(@RequestParam(name = "id") Long id) {
         return customerMap.get(id);
     }
+
+    @RequestMapping(path = "clearCache")
+    public String clearCache() {
+        customerMap.clear();
+        return "{}";
+    }
 }
