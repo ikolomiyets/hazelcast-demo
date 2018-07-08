@@ -1,17 +1,22 @@
 package io.iktech.edu.hazelcastdemo;
 
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IExecutorService;
+import com.hazelcast.core.ILock;
 import com.hazelcast.core.IMap;
+import com.hazelcast.query.SqlPredicate;
 import io.iktech.edu.hazelcastdemo.dao.CustomerService;
 import io.iktech.edu.hazelcastdemo.dao.entity.Customer;
+import io.iktech.edu.hazelcastdemo.executors.EchoTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 @RestController
 public class Controller {
@@ -27,6 +32,9 @@ public class Controller {
 
     @Autowired
     private CustomerService service;
+
+    @Autowired
+    private HazelcastInstance hazelcastInstance;
 
     @RequestMapping(path = "putValue")
     public String putValue(@RequestParam(name = "key") String key, @RequestParam(name = "value") String value) {
@@ -61,6 +69,42 @@ public class Controller {
     @RequestMapping(path = "clearCache")
     public String clearCache() {
         customerMap.clear();
+        return "{}";
+    }
+
+    @RequestMapping(value = "/query", method = RequestMethod.POST)
+    public Collection<Customer> sqlPredicate(@RequestBody String query) {
+        return customerMap.values(new SqlPredicate(query));
+    }
+
+    @RequestMapping("/lockExample")
+    public String lockExample() throws Exception {
+        ILock myLock = hazelcastInstance.getLock("myLock");
+        try {
+            logger.info("Acquiring lock");
+            myLock.lock();
+            logger.info("Lock acquired");
+            Thread.sleep(10000L);
+            logger.info("lockExample() executed successfully");
+        } finally {
+            myLock.unlock();
+        }
+
+        return "{}";
+    }
+
+    @RequestMapping("/executeExample")
+    public String executeExample() {
+        IExecutorService executorService = hazelcastInstance.getExecutorService("exec");
+        IntStream.range(1, 1000).forEach(i -> {
+            executorService.submit(new EchoTask(i));
+            try {
+                Thread.sleep(1000L);
+            } catch (Exception e) {
+
+            }
+        });
+
         return "{}";
     }
 }
