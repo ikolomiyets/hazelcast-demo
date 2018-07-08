@@ -16,6 +16,7 @@ public class CustomerService {
         Logger logger = LoggerFactory.getLogger(CustomerService.class);
         Map<Long, Customer> customers = new HashMap<>();
 
+        logger.info("Loading customers");
         jdbcTemplate.query("select * from customer", (rs) -> {
             Customer customer = new Customer();
 
@@ -30,6 +31,7 @@ public class CustomerService {
             customers.put(customer.getId(), customer);
         });
 
+        logger.info("Loading customer addresses");
         jdbcTemplate.query("select * from customer_address", (rs) -> {
             Address address = new Address();
 
@@ -49,6 +51,7 @@ public class CustomerService {
             }
         });
 
+        logger.info("Loading customer autos");
         jdbcTemplate.query("select * from customer_auto", (rs) -> {
             Auto auto = new Auto();
 
@@ -65,6 +68,7 @@ public class CustomerService {
             }
         });
 
+        logger.info("Loading customer credit cards");
         jdbcTemplate.query("select * from customer_credit_card", (rs) -> {
             CreditCard creditCard = new CreditCard();
 
@@ -81,6 +85,7 @@ public class CustomerService {
             }
         });
 
+        logger.info("Loading customer emails");
         jdbcTemplate.query("select * from customer_email", (rs) -> {
             Email email = new Email();
 
@@ -97,6 +102,7 @@ public class CustomerService {
             }
         });
 
+        logger.info("Loading customer jobs");
         jdbcTemplate.query("select * from customer_job", (rs) -> {
             Job job = new Job();
 
