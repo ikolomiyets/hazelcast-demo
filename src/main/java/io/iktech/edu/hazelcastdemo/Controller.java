@@ -1,16 +1,16 @@
 package io.iktech.edu.hazelcastdemo;
 
 import com.hazelcast.core.IMap;
+import io.iktech.edu.hazelcastdemo.dao.CustomerService;
+import io.iktech.edu.hazelcastdemo.dao.entity.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -26,7 +26,7 @@ public class Controller {
     private IMap<Long, Customer> customerMap;
 
     @Autowired
-    private Service service;
+    private CustomerService service;
 
     @RequestMapping(path = "putValue")
     public String putValue(@RequestParam(name = "key") String key, @RequestParam(name = "value") String value) {
@@ -37,18 +37,8 @@ public class Controller {
     @RequestMapping(path = "loadData")
     public String loadData() {
         int count = service.findCount();
-        int batchSize = 10000;
-        int currentCount = 0;
-        int currentPage = 0;
-        Map<Long, Customer> tmpMap = new HashMap<Long, Customer>(batchSize);
-        while (currentCount < count) {
-            service.findAll(PageRequest.of(currentPage, batchSize)).forEach(c -> tmpMap.put(c.getId(), c));
-            currentCount += tmpMap.size();
-            currentPage++;
-            customerMap.putAll(tmpMap);
-            tmpMap.clear();
-            logger.info(String.format("Loaded page %d", currentPage));
-        }
+        Map<Long, Customer> map = service.findAll();
+        customerMap.putAll(map);
         logger.info("Data loaded into the cluster");
         return "{}";
     }

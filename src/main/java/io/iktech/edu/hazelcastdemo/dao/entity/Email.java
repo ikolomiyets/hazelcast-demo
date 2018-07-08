@@ -1,21 +1,15 @@
-package io.iktech.edu.hazelcastdemo;
+package io.iktech.edu.hazelcastdemo.dao.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "CUSTOMER_EMAIL")
 public class Email implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     private String type = "HOM";
     private String emailAddress;
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "CUSTOMER_ID")
     private Customer customer;
 
     public Long getId() {

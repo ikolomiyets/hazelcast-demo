@@ -1,21 +1,15 @@
-package io.iktech.edu.hazelcastdemo;
+package io.iktech.edu.hazelcastdemo.dao.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "CUSTOMER_CREDIT_CARD")
 public class CreditCard implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     private String type;
     private String cardNumber;
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "CUSTOMER_ID")
     private Customer customer;
 
     public Long getId() {

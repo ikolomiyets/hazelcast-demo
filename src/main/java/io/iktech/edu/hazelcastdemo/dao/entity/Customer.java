@@ -1,17 +1,12 @@
-package io.iktech.edu.hazelcastdemo;
+package io.iktech.edu.hazelcastdemo.dao.entity;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import javax.persistence.*;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Entity
 public class Customer implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
@@ -21,37 +16,10 @@ public class Customer implements Serializable {
     private String userId;
     private String currency;
 
-    @OneToMany(mappedBy = "customer",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER)
     private Set<Address> addresses = new HashSet<>();
-
-    @OneToMany(mappedBy = "customer",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER)
     private Set<CreditCard> creditCards = new HashSet<>();
-
-
-    @OneToMany(mappedBy = "customer",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER)
     private Set<Email> emails = new HashSet<>();
-
-
-    @OneToMany(mappedBy = "customer",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER)
     private Set<Auto> autos = new HashSet<>();
-
-
-    @OneToMany(mappedBy = "customer",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER)
     private Set<Job> jobs = new HashSet<>();
 
     public Long getId() {
